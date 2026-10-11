@@ -10,6 +10,8 @@ from odoo.addons.base.tests.common import BaseCommon
 
 @tagged("post_install", "-at_install")
 class TestAccountPaymentMode(BaseCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -46,10 +48,9 @@ class TestAccountPaymentMode(BaseCommon):
     def _create_journal(cls, name, company):
         # Create a cash account
         # Create a journal for cash account
-        journal = cls.journal_model.create(
+        return cls.journal_model.create(
             {"name": name, "code": name, "type": "bank", "company_id": company.id}
         )
-        return journal
 
     def test_payment_mode_company_consistency_change(self):
         # Assertion on the constraints to ensure the consistency

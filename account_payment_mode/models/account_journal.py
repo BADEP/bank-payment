@@ -10,10 +10,9 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     def _default_outbound_payment_methods(self):
-        all_out = self.env["account.payment.method"].search(
+        return self.env["account.payment.method"].search(
             [("payment_type", "=", "outbound")]
         )
-        return all_out
 
     def _default_inbound_payment_methods(self):
         method_info = self.env[
@@ -27,13 +26,12 @@ class AccountJournal(models.Model):
             for code, info in method_info.items()
             if info.get("mode") in allowed_modes
         )
-        all_in = self.env["account.payment.method"].search(
+        return self.env["account.payment.method"].search(
             [
                 ("payment_type", "=", "inbound"),
                 ("code", "not in", unique_codes),  # filter out unique codes
             ]
         )
-        return all_in
 
     @api.constrains("company_id")
     def company_id_account_payment_mode_constrains(self):
